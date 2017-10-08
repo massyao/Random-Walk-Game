@@ -1,0 +1,64 @@
+<html>
+<style>
+graphy{
+width:100%;
+height:10px;
+background:pink;
+}
+
+</style>
+<div id='count'></div>
+<body>
+
+<div id='graphy'>
+</div>
+
+</body>
+<script src='http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js'></SCRIPT>
+<script>
+
+//$('#graphy').css('background','blue');
+
+function render(){
+	game(index);
+	var content = '';
+	var arr = player;
+	
+	for(var i=0,l=arr.length;i<l;i++){
+	
+		content += '<div style="float:left;margin:5px;background:red;width:10px;height:'+arr[i]+'"></div>'
+		//document.getElementById('graphy').innerHTML = '<p>111</p>';
+		//$('#graphy_'+i).css('width',arr[i]);
+		
+	}
+	
+	document.getElementById('graphy').innerHTML = content;
+	document.getElementById('count').innerHTML = ''+count;
+}
+
+
+function game(index){
+	count++;
+	
+	for(var i=0;i<index;i++){
+		player[i] = (player[i]-1)?player[i]-1:player[i];
+		receiver_id  = Math.ceil(Math.random()*index);
+		player[receiver_id] += 1;
+	}
+	
+}
+
+
+var player = [];
+var index = 50;
+var count = 1;
+
+for(var i=0;i<index;i++){
+	player[i] = 100;
+}
+
+//console.log(player.length);
+setInterval(render,50);
+
+</script>
+</html>
