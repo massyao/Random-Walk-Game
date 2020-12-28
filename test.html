@@ -1,30 +1,42 @@
+<!DOCTYPE html>
 <html>
-<style>
-graphy{
-width:100%;
-height:10px;
-background:pink;
-}
-
-</style>
-<div id='count'></div>
+<head>
+  <title>Chaotic</title>
+  <style type="text/css">
+    *{
+      padding: 0;
+      margin:0;
+      border:0 solid #fff;
+    }
+    ::-webkit-scrollbar {
+        width: 0px;
+    }
+    body{
+        /* overflow:scroll; */
+        /* overflow-x:hidden;
+        overflow-y:hidden; */
+        /* background-color:#000022; */
+    }
+  </style>
+</head>
 <body>
 
-<div id='graphy'>
+<div id="container">
+  <canvas id="canvas"  width="10000" height="1000" style="margin-left:10px;">Your Browser does not support Canvas, please upgrade</canvas>
+  <canvas id="can"  width="10000" height="1000" style="margin-left:10px;">Your Browser does not support Canvas, please upgrade</canvas>
+  <canvas id="ddd"  width="10000" height="1000" style="margin-left:10px;">Your Browser does not support Canvas, please upgrade</canvas>
 </div>
 
-</body>
-<script src='http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js'></SCRIPT>
 <script>
 
 //$('#graphy').css('background','blue');
 
 function render(){
-	game(index);
-	var content = '';
-	var arr = player;
+	game();
+	let content = '';
+	let arr = player;
 	
-	for(var i=0,l=arr.length;i<l;i++){
+	for(let i=0,l=arr.length;i<l;i++){
 	
 		content += '<div style="float:left;margin:5px;background:red;width:10px;height:'+arr[i]+'"></div>'
 		//document.getElementById('graphy').innerHTML = '<p>111</p>';
@@ -37,28 +49,149 @@ function render(){
 }
 
 
-function game(index){
+function game(){
 	count++;
 	
-	for(var i=0;i<index;i++){
-		player[i] = (player[i]-1)?player[i]-1:player[i];
-		receiver_id  = Math.ceil(Math.random()*index);
-		player[receiver_id] += 1;
+	for(let i=0; i<player_total; i++){
+		player[i] = (player[i]-1) ? player[i]-1 : player[i];
+		receiver_id  = Math.floor(Math.random() * player_total);
+		player[receiver_id] = ~~player[receiver_id] + 1;
 	}
 	
 }
 
 
-var player = [];
-var index = 50;
-var count = 1;
+let player = [];
+let player_total = 50;
+let count = 1;
 
-for(var i=0;i<index;i++){
+let diff_arr = []
+
+for(let i=0; i<player_total; i++){
 	player[i] = 100;
 }
 
-//console.log(player.length);
-setInterval(render,50);
+console.log(player.length);
+// setInterval(render,50);
+
+function plot(plot_arr, gutter = 20, color = 'red', canvasId) {
+	try {
+		const canvas = document.getElementById(canvasId)
+		const context = canvas.getContext("2d")
+		const canvas_width = 10000
+		const canvs_height = 1000
+
+		// x-oxis
+		context.beginPath();       // Start a new path
+		context.moveTo(0, canvs_height/2);    // Move the pen to (30, 50)
+		context.lineTo(canvas_width, canvs_height/2);  // Draw a line to (150, 100)
+		context.stroke();   
+
+		// y-oxis
+		context.beginPath();       // Start a new path
+		context.moveTo(0, 0);    // Move the pen to (30, 50)
+		context.lineTo(0, canvs_height);  // Draw a line to (150, 100)
+		context.stroke();   
+
+		let max = Math.max(...plot_arr)
+		let min = Math.min(...plot_arr)
+		let max_abs = Math.ceil(Math.max(Math.abs(max), Math.abs(min)))
+
+		// console.log('plot_arr', plot_arr)
+		let unify_arr = plot_arr.map(y => y / max_abs * canvs_height/2)
+		unify_arr.forEach((y, x) => {
+		// plot(year * 10, doposit/5, 'red', year)
+		context.fillStyle = color
+		if (y > 0) {
+			context.fillRect(x * gutter, canvs_height/2 - y, 0.8 * gutter, y)
+		} else {
+			context.fillRect(x * gutter, canvs_height/2 , 0.8 * gutter, 0 - y)
+		}
+
+		context.textAlign = "start";
+		context.textBaseline = "bottom";
+		context.font = '14px serif';
+		context.fillStyle = 'blue';
+		context.fillText('' + x, x * gutter, canvs_height/2 + 10)
+		})
+
+
+		context.textAlign = "start";
+		context.textBaseline = "bottom";
+		context.font = '14px serif';
+		context.fillStyle = 'blue';
+		context.fillText('+' + max_abs, 0 ,20)
+		context.fillText('-' + max_abs, 0 ,990)
+	} catch (e) {
+		console.log(e)
+	}
+  }
+
+
+	window.requestAnimFrame = (function(){
+		return  window.requestAnimationFrame       || 
+				window.webkitRequestAnimationFrame || 
+				window.mozRequestAnimationFrame    || 
+				window.oRequestAnimationFrame      || 
+				window.msRequestAnimationFrame     || 
+				function( callback ){
+				window.setTimeout(callback, 1000 / 60);
+				};
+	})();
+
+	// let canvas = document.getElementById('ID');
+    // let ctx = canvas.getContext('2d');
+    // ctx.globalAlpha = 0.05;
+    // canvas.width = window.innerWidth ;
+	// canvas.height = window.innerHeight ;
+	
+
+	plot(player)
+	// function requestAnimFrame_next(data) {
+	// 	requestAnimFrame_next()
+	// }
+	// requestAnimFrame(() => {
+	// 	game(player_total);
+	// plot(player)
+	// })
+
+	setInterval(() => {
+		// console.log(player)
+		// return
+		game();
+		const canvas = document.getElementById('canvas')
+		const context = canvas.getContext("2d")
+		context.clearRect(0,0, canvas.width,canvas.height);
+		// console.log('aveage', player.reduce((acc, cur) => acc + cur, 0) / player_total)
+		plot([...player], 20, 'red', 'canvas')	
+
+		const can = document.getElementById('can')
+		const con = can.getContext("2d")
+		con.clearRect(0,0, can.width,can.height);
+		let canTemp = [...player]
+		let tempArr = [...canTemp.sort((a,b) => a-b)]
+		// console.log('midden ', tempArr[25])
+		plot(tempArr, 20,  'blue', 'can')	
+
+		if (diff_arr.length > 50) {
+			diff_arr.shift()
+		}
+		let num = player.reduce((acc, cur) => acc + cur, 0) / player_total - tempArr[24]
+		diff_arr.push(num)
+		const ddd = document.getElementById('ddd')
+		const cond = ddd.getContext("2d")
+		cond.clearRect(0,0, ddd.width,ddd.height);
+		// console.log('midden ', tempArr[25])
+		plot(diff_arr, 20,  'pink', 'ddd')	
+		// console.log('aveage - midden',  player.reduce((acc, cur) => acc + cur, 0) / player_total - tempArr[24])
+	}, 5)
+
+    // document.body.addEventListener("click", function(){
+	// 	// g_obj.animine_status = g_obj.animine_status ?false :true;
+	// 	game(player_total);
+	// 	console.log(player)
+	// 	plot(player)
+    // });
 
 </script>
 </html>
