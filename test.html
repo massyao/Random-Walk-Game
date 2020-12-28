@@ -8,9 +8,9 @@
       margin:0;
       border:0 solid #fff;
     }
-    ::-webkit-scrollbar {
+    /* ::-webkit-scrollbar {
         width: 0px;
-    }
+    } */
     body{
         /* overflow:scroll; */
         /* overflow-x:hidden;
@@ -22,8 +22,11 @@
 <body>
 
 <div id="container">
+	<div id="count"> </div>
   <canvas id="canvas"  width="10000" height="1000" style="margin-left:10px;">Your Browser does not support Canvas, please upgrade</canvas>
   <canvas id="can"  width="10000" height="1000" style="margin-left:10px;">Your Browser does not support Canvas, please upgrade</canvas>
+  </br>
+  <div id="average"> </div>
   <canvas id="ddd"  width="10000" height="1000" style="margin-left:10px;">Your Browser does not support Canvas, please upgrade</canvas>
 </div>
 
@@ -62,7 +65,7 @@ function game(){
 
 
 let player = [];
-let player_total = 50;
+let player_total = 500;
 let count = 1;
 
 let diff_arr = []
@@ -159,6 +162,39 @@ function plot(plot_arr, gutter = 20, color = 'red', canvasId) {
 		// console.log(player)
 		// return
 		game();
+		// const canvas = document.getElementById('canvas')
+		// const context = canvas.getContext("2d")
+		// context.clearRect(0,0, canvas.width,canvas.height);
+		// // console.log('aveage', player.reduce((acc, cur) => acc + cur, 0) / player_total)
+		// plot([...player], 20, 'red', 'canvas')	
+
+		// const can = document.getElementById('can')
+		// const con = can.getContext("2d")
+		// con.clearRect(0,0, can.width,can.height);
+		// let canTemp = [...player]
+		// let tempArr = [...canTemp.sort((a,b) => a-b)]
+		// // console.log('midden ', tempArr[25])
+		// plot(tempArr, 20,  'blue', 'can')	
+
+		// if (diff_arr.length > 50) {
+		// 	diff_arr.shift()
+		// }
+		// let num = player.reduce((acc, cur) => acc + cur, 0) / player_total - tempArr[Math.floor((player_total + 1) / 2)]
+		// diff_arr.push(num)
+		// const ddd = document.getElementById('ddd')
+		// const cond = ddd.getContext("2d")
+		// cond.clearRect(0,0, ddd.width,ddd.height);
+		// document.getElementById('average').innerHTML = player.reduce((acc, cur) => acc + cur, 0) / player_total
+		// // console.log('midden ', tempArr[25])
+		// plot(diff_arr, 20,  'pink', 'ddd')	
+		// // console.log('aveage - midden',  player.reduce((acc, cur) => acc + cur, 0) / player_total - tempArr[24])
+	}, 1)
+
+    document.body.addEventListener("click", function(){
+		// g_obj.animine_status = g_obj.animine_status ?false :true;
+		
+		document.getElementById('count').innerHTML = count
+
 		const canvas = document.getElementById('canvas')
 		const context = canvas.getContext("2d")
 		context.clearRect(0,0, canvas.width,canvas.height);
@@ -176,22 +212,15 @@ function plot(plot_arr, gutter = 20, color = 'red', canvasId) {
 		if (diff_arr.length > 50) {
 			diff_arr.shift()
 		}
-		let num = player.reduce((acc, cur) => acc + cur, 0) / player_total - tempArr[24]
+		let num = player.reduce((acc, cur) => acc + cur, 0) / player_total - tempArr[Math.floor((player_total + 1) / 2)]
 		diff_arr.push(num)
 		const ddd = document.getElementById('ddd')
 		const cond = ddd.getContext("2d")
 		cond.clearRect(0,0, ddd.width,ddd.height);
+		document.getElementById('average').innerHTML = player.reduce((acc, cur) => acc + cur, 0) / player_total
 		// console.log('midden ', tempArr[25])
 		plot(diff_arr, 20,  'pink', 'ddd')	
-		// console.log('aveage - midden',  player.reduce((acc, cur) => acc + cur, 0) / player_total - tempArr[24])
-	}, 5)
-
-    // document.body.addEventListener("click", function(){
-	// 	// g_obj.animine_status = g_obj.animine_status ?false :true;
-	// 	game(player_total);
-	// 	console.log(player)
-	// 	plot(player)
-    // });
+    });
 
 </script>
 </html>
